@@ -1,0 +1,28 @@
+[id$="-modal-form"] button{
+  margin: 20px 0px 0px;
+  position: relative;
+  right: 0;
+  left: 100%;
+  transform: translateX(-100%);
+}
+
+[id$="-modal-form"] input[type=text],
+[id$="-modal-form"] input[type=password],
+[id$="-modal-form"] input[type=email]{
+	background-color: #393d43;
+	border: none;
+	color: inherit;
+}
+
+[id$="-modal-form"] input[type=text]:focus,
+[id$="-modal-form"] input[type=password]:focus,
+[id$="-modal-form"] input[type=email]:focus{
+  background-color: #393d43;
+  box-shadow: 0px 0px 0px 1px white;
+  
+}
+
+[id$="-modal-form"] .form-group {
+	position: relative;
+	margin-bottom: 5px;
+}

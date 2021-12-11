@@ -1,0 +1,86 @@
+
+.modal-dark-content {
+	background-color: #282c34;
+}
+
+ul.nav-tabs li button{
+	background-color: transparent !important;
+	color:white;
+}
+ul.nav-tabs li button:hover{
+	color:#c8b6ff !important;
+}
+
+ul.nav-tabs li button.active{
+	color:#6bb2ff !important;
+}
+ul.nav-tabs,
+ul.nav-tabs .nav-link{
+	font-size: 14pt;
+	padding: 0;
+	margin-right: 20px;
+	border:none;
+}
+
+/* #enter-modal .modal-dark-content .form-label {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0px;
+  left: 10px;
+  opacity: 0.5;
+  height: 100%;
+  transition: 0.3s;
+} */
+/* #enter-modal .modal-dark-content .form-group.focus .form-label,
+#enter-modal .modal-dark-content .form-group.filled .form-label {
+  top: -35px;
+  left: 0;
+  opacity: 1;
+} */
+
+/*
+#enter-modal .modal-dark-content input[type=password], 
+#enter-modal .modal-dark-content input[type=text], 
+#enter-modal .modal-dark-content input[type=email] {
+  font-size: 14pt;
+  margin-top: 40px;
+}
+
+#enter-modal .modal-dark-content .form-group.focus .form-label,
+#enter-modal .modal-dark-content .form-group.filled .form-label {
+  top: -35px;
+  left: 0;
+  opacity: 1;
+}
+#enter-modal .modal-dark-content #remember-me-checkbox {
+  background-color: #c8b6ff;
+  border-color: #c8b6ff;
+}
+#enter-modal .modal-dark-content #remember-me-checkbox:not(:checked) {
+  background: inherit;
+}
+#enter-modal .modal-dark-content .form-check-input:checked[type=checkbox] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+#enter-modal .nav-link {
+  padding: 0;
+  font-size: 14pt;
+  margin-right: 20px;
+}
+#enter-modal .nav-link.active {
+  color: #6bb2ff;
+}
+#enter-modal label {
+  -webkit-user-select: none;
+          user-select: none;
+}
+#enter-modal .form-check {
+  margin-top: 15px;
+}
+#enter-modal .form-check-input:focus {
+  box-shadow: none;
+}
+#enter-modal .top-login-error {
+  color: #ff4a4a;
+} */
