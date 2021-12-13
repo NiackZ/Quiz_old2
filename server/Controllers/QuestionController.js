@@ -31,9 +31,8 @@ class QuestionController {
 
 	async getAll(req, res, next) {
 		try {
-			const { user_id } = req.body
-			const addResult = await QuizService.getAll(user_id)
-			return res.json(addResult)
+			const result = await QuestionService.getAll({quiz: req.params.id})
+			return res.json(result)
 		} catch (error) {
 			console.log('error');
 			console.dir(error)

@@ -1,11 +1,13 @@
-import { useContext } from 'react';
-import { Tab, Tabs } from 'react-bootstrap'
+import React, { useContext, useEffect } from 'react';
+import { Fade, Tab, Tabs } from 'react-bootstrap'
 import './Tabs.css'
 import { Context } from '..'
 import { observer } from 'mobx-react-lite'
 
 function ControlledTabs({ tabs, ...props }) {
 	const { modal } = useContext(Context)
+	
+	useEffect(async()=>modal.setModalFocus(tabs[0].eventKey),[])
 
 	if (tabs == null) 
 		return <h3 className="text-center">Tabs is null</h3>
@@ -14,10 +16,11 @@ function ControlledTabs({ tabs, ...props }) {
 		id="controlled-tab"
 		activeKey={modal.modalFocus}
 		onSelect={(k) => modal.setModalFocus(k)}
-		className="mb-3"
+		className={props.className ? props.className+" mb-3": "mb-3"}
+		transition={Fade}
 	>
 		{tabs.map((tab)=>
-			<Tab eventKey={tab.eventKey} title={tab.title}>
+			<Tab key={tab.eventKey} eventKey={tab.eventKey} title={tab.title}>
 				{tab.content}
 			</Tab>
 		)}

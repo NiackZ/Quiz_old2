@@ -27,9 +27,6 @@ router.post('/quiz/new', QuizController.add)
 router.delete('/quiz/:id', QuizController.delete)
 router.get('/quiz/:id', QuizController.getOne)
 router.post('/quiz/:id/questions/new', QuestionController.add)
-// router.get('/posts', PostController.getAll)
-// router.get('/posts/:id', PostController.getOne)
-// router.put('/posts/', PostController.update)
-// router.delete('/posts/:id', PostController.delete)
+router.post('/quiz/:id/questions', QuestionController.getAll)
 
 export default router
