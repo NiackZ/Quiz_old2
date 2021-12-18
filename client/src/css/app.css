@@ -100,6 +100,7 @@ nav .brand-nav-link, a.nav-link:not(.disabled) {
 	cursor: pointer;
 	transition: .1s;
 }
+
 .quiz-title span:hover{
 	text-decoration: underline;
 }
