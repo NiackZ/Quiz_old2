@@ -103,3 +103,15 @@ nav .brand-nav-link, a.nav-link:not(.disabled) {
 .quiz-title span:hover{
 	text-decoration: underline;
 }
+
+.all-questions-row .question-div{
+	border: 1px solid gray;
+	margin: 30px 3px;
+	padding: 15px 7px;
+	border-radius: 3px;
+}
+.all-questions-row .question-div ul{
+	margin-bottom: 0;
+	list-style: none;
+	padding-left: 1rem;
+}

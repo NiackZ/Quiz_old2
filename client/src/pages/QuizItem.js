@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { Context } from '..';
 import { useLocation } from 'react-router-dom';
 import QuestionForm from '../components/QuestionForm';
@@ -17,7 +17,7 @@ const QuizItem = () => {
 
 	const itemId = location.pathname.split('/')[location.pathname.split('/').length - 1]
 
-	useEffect(async() => {
+	useEffect(async () => {
 		checkQuiz()
 		getAllQuestions()
 		setLoading(false)
@@ -35,44 +35,61 @@ const QuizItem = () => {
 	const checkQuiz = async () => {
 		const response = await axios.get(
 			`/quiz/${itemId}`,
-			{ 
-				headers: { 
+			{
+				headers: {
 					Authorization: localStorage.getItem('token')
-				} 
+				}
 			}
 		)
 		setQuizName(response?.data[0].title)
 	}
 
-	const getAllQuestions = async() => {
+	const getAllQuestions = async () => {
 		const response = await axios.post(`/quiz/${itemId}/questions`)
-		if ( response.data.length > 0 ) setQuestionsArray(response.data)
+		if (response.data.length > 0) setQuestionsArray(response.data)
 	}
 
-	if (loading) return <Loading/>
+	if (loading) return <Loading />
+	console.log(questionsArray)
 	const tabs = [
 		{
-			eventKey:"newQuestion", title:"Новый вопрос", content:
-			<Container>
-				<h3 className="text-center">{quizName}</h3>
-				<QuestionForm quizId={itemId}/>
-			</Container>
+			eventKey: "newQuestion", title: "Новый вопрос", content:
+				<Container>
+					<h3 className="text-center">{quizName}</h3>
+					<QuestionForm quizId={itemId} />
+				</Container>
 		},
 		{
-			eventKey:"allQuestions", title:"Все вопросы", content: 
-			<Container>
-				<h3 className="text-center">Все вопросы</h3>
-				{
-					questionsArray.length > 0
-					? questionsArray.map(question=> <div>{question.title}</div>)
-					: <></>
-				}
-			</Container>
+			eventKey: "allQuestions", title: "Все вопросы", content:
+				<Container>
+					<h3 className="text-center">Все вопросы</h3>
+					{
+						questionsArray.length > 0
+							? <Row className="justify-content-md-center all-questions-row">
+								<Col lg={8} className="mb-3">
+									{
+										questionsArray.map(question => {
+											return (
+											<div key={question._id} className='question-div'>
+												<span>{question.title}</span>
+												<ul>
+													<li>a1</li>
+													<li>a2</li>
+													<li>a3</li>
+												</ul>
+											</div>)
+										})
+									}
+								</Col>
+							</Row>
+							: <></>
+					}
+				</Container>
 		}
 	]
 	return (
 		<Container className="margin-container">
-			<ControlledTabs className="d-flex justify-content-center" tabs={tabs} onFocus={tabs[0].eventKey}/>
+			<ControlledTabs className="d-flex justify-content-center" tabs={tabs} onFocus={tabs[0].eventKey} />
 		</Container>
 	);
 };
