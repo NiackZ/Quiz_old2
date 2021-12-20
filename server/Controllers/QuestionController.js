@@ -33,7 +33,7 @@ class QuestionController {
 		try {
 			const result = await QuestionService.getAll({quiz: req.params.id})
 			const ids = result.map( q=> q._id)
-			const answers = await AnswerService.getAll({questionsIds: ids})
+			const answers = await AnswerService.getAll(ids)
 			return res.json({questions: result,answers})
 		} catch (error) {
 			console.log('error');

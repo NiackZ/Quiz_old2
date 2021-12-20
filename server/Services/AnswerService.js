@@ -16,7 +16,7 @@ class AnswerService {
 	}
 
 	async getAll( questionsIds ) {
-		const allQuizzes = await answerModel.find( { question : { $in : questionsIds.questionsIds } } );
+		const allQuizzes = await answerModel.find( { question : { $in : questionsIds } } );
 		return allQuizzes
 	}
 /*
