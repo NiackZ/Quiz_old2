@@ -15,12 +15,11 @@ class AnswerService {
 		return answerIds
 	}
 
-	/*
-	async getAll( userId ) {
-		const allQuizzes = await quizModel.find({user: userId})
+	async getAll( questionsIds ) {
+		const allQuizzes = await answerModel.find( { question : { $in : questionsIds.questionsIds } } );
 		return allQuizzes
 	}
-
+/*
 	async getOne(id, userId) {
 		const oneQuiz = await quizModel.find({_id: id, user: userId})
 		return oneQuiz

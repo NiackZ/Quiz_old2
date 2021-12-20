@@ -12,7 +12,6 @@ class QuestionService {
 	}
 
 	async getAll( quiz ) {
-		console.log(quiz);
 		const result = await questionModel.find(quiz)
 		return result
 	}

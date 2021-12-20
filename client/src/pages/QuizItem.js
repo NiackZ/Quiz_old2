@@ -46,11 +46,11 @@ const QuizItem = () => {
 
 	const getAllQuestions = async () => {
 		const response = await axios.post(`/quiz/${itemId}/questions`)
+		console.log(JSON.stringify(response.data.questions));
 		if (response.data.length > 0) setQuestionsArray(response.data)
 	}
 
 	if (loading) return <Loading />
-	console.log(questionsArray)
 	const tabs = [
 		{
 			eventKey: "newQuestion", title: "Новый вопрос", content:

@@ -32,7 +32,9 @@ class QuestionController {
 	async getAll(req, res, next) {
 		try {
 			const result = await QuestionService.getAll({quiz: req.params.id})
-			return res.json(result)
+			const ids = result.map( q=> q._id)
+			const answers = await AnswerService.getAll({questionsIds: ids})
+			return res.json({questions: result,answers})
 		} catch (error) {
 			console.log('error');
 			console.dir(error)
