@@ -46,9 +46,7 @@ const QuizItem = () => {
 
 	const getAllQuestions = async () => {
 		const response = await axios.post(`/quiz/${itemId}/questions`)
-		const answers = response.data.answers
 		console.log(response.data.questions);
-		console.log(answers);
 		if (response.data.length > 0) setQuestionsArray(response.data)
 	}
 

@@ -31,15 +31,8 @@ class QuestionController {
 
 	async getAll(req, res, next) {
 		try {
-			const result = (await QuestionService.getAll({ quiz: req.params.id })).map((question) => {
-				return {
-					id: question._id,
-					quiz: question.quiz,
-					title: question.title,
-					isParent: question.isParent
-				}
-			})
-			const ids = result.map(q => q.id)
+			const result = await QuestionService.getAll({ quiz: req.params.id })
+			const ids = result.map(q => q._id)
 			const answers = (await AnswerService.getAll(ids)).map((answer) => {
 				return {
 					id: answer._id,
@@ -51,7 +44,16 @@ class QuestionController {
 					? a.index - b.index 
 					: a.question - b.question
 			)
-			return res.json({ questions: result, answers })
+			const questions = result.map((question) => {
+				return {
+					id: question._id,
+					quiz: question.quiz,
+					title: question.title,
+					answers: answers.filter(answer=>answer.question == question.id),
+					isParent: question.isParent
+				}
+			})
+			return res.json({ questions })
 		} catch (error) {
 			console.log('error');
 			console.dir(error)
