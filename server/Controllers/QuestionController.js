@@ -14,14 +14,14 @@ class QuestionController {
 			})
 			const addQuestionId = await QuestionService.add(questionData)
 			let addAnswersResult = null
-			if (addQuestionId){
+			if (addQuestionId) {
 				const answerData = Object.assign({
 					answers: req.body.answers,
 					questionId: addQuestionId
 				})
 				addAnswersResult = await AnswerService.add(answerData)
 			}
-			return res.json({addQuestionId, addAnswersResult})
+			return res.json({ addQuestionId, addAnswersResult })
 		} catch (error) {
 			console.log('error');
 			console.dir(error)
@@ -31,10 +31,27 @@ class QuestionController {
 
 	async getAll(req, res, next) {
 		try {
-			const result = await QuestionService.getAll({quiz: req.params.id})
-			const ids = result.map( q=> q._id)
-			const answers = await AnswerService.getAll(ids)
-			return res.json({questions: result,answers})
+			const result = (await QuestionService.getAll({ quiz: req.params.id })).map((question) => {
+				return {
+					id: question._id,
+					quiz: question.quiz,
+					title: question.title,
+					isParent: question.isParent
+				}
+			})
+			const ids = result.map(q => q.id)
+			const answers = (await AnswerService.getAll(ids)).map((answer) => {
+				return {
+					id: answer._id,
+					question: answer.question,
+					text: answer.text,
+					index: answer.index
+				}
+			}).sort((a, b) => (a.question).equals(b.question)
+					? a.index - b.index 
+					: a.question - b.question
+			)
+			return res.json({ questions: result, answers })
 		} catch (error) {
 			console.log('error');
 			console.dir(error)
@@ -46,7 +63,7 @@ class QuestionController {
 		try {
 			const { id } = req.params
 			const token = req.headers.authorization
-			const {userData} = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
+			const { userData } = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
 			const getResult = await QuizService.getOne(id, userData.id)
 			return res.json(getResult)
 		} catch (error) {
