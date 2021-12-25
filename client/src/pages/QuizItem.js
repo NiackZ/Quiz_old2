@@ -46,10 +46,9 @@ const QuizItem = () => {
 
 	const getAllQuestions = async () => {
 		const response = await axios.post(`/quiz/${itemId}/questions`)
-		console.log(response.data.questions);
-		if (response.data.length > 0) setQuestionsArray(response.data)
+		if (response.data.questions.length > 0) setQuestionsArray(response.data.questions)
 	}
-
+	console.log(questionsArray)
 	if (loading) return <Loading />
 	const tabs = [
 		{
@@ -70,13 +69,12 @@ const QuizItem = () => {
 									{
 										questionsArray.map(question => {
 											return (
-											<div key={question._id} className='question-div'>
+											<div key={question.id} className='question-div'>
 												<span>{question.title}</span>
-												<ul>
-													<li>a1</li>
-													<li>a2</li>
-													<li>a3</li>
-												</ul>
+												{question.answers.length > 0 
+													? <ul>{question.answers.map(answer=> <li>{answer.text}</li>)}</ul>
+													: <div>Нет ответов</div>
+												}
 											</div>)
 										})
 									}
