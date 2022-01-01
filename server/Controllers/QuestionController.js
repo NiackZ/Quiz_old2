@@ -63,11 +63,14 @@ class QuestionController {
 
 	async getOne(req, res, next) {
 		try {
-			const { id } = req.params
-			const token = req.headers.authorization
-			const { userData } = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
-			const getResult = await QuizService.getOne(id, userData.id)
-			return res.json(getResult)
+			const token = req.headers.authorization.split(' ')[1]
+			const { id, questionId } = req.params
+			if (!token || !id || !questionId) res.status(400)
+			 const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
+			 console.log(userData)
+			// const getResult = await QuizService.getOne(id, userData.id)
+			// return res.json(getResult)
+			return res.json('hey')
 		} catch (error) {
 			console.log('error');
 			console.dir(error)

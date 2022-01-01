@@ -1,6 +1,5 @@
-import express, { Router } from 'express'
+import express from 'express'
 import Fastify from 'fastify'
-import fastifyCors from 'fastify-cors'
 import helmet from 'helmet'
 import cors from 'cors'
 import mongoose from 'mongoose'
@@ -33,35 +32,7 @@ const upload = multerUpload({storage:fileStorageEngine, limits: maxUploadSize})
 
 const PORT = process.env.PORT || 5000
 
-const fastify = Fastify({logger: true})
 const expressServer = 1
-
-// =========== FASIFY ===========
-/*
-
-fastify.register(fastifyCors)
-fastify.get('/api/test', async (request, reply) => {
-	request.headers={
-		"Access-Control-Allow-Origin": "*",
-		"access-control-allow-methods":"GET"
-	}
-	console.log(request.headers);
-  reply.send({hello:"world"})
-})
-
-const startFasitfyServer = async () => {
-	try {
-		//await mongoose.connect(process.env.MONGO_URL)
-		fastify.listen(PORT, () => {
-			console.log(`Fastify server started on port ${PORT}`.toUpperCase())
-		})
-	} catch (err) {
-		fastify.log.error(err)
-		process.exit(1)
-	}
-}
-*/
-// =========== END FASIFY ===========
 
 const startExpressServer = async () =>{
 	try {
@@ -73,7 +44,7 @@ const startExpressServer = async () =>{
 		})
 		app.use(helmet())
 		app.use(cors({
-			origin: "http://localhost:3000",
+			origin: process.env.CLIENT_URL,
 			credentials: true
 		}))
 		app.use(express.urlencoded({ extended: true, limit: '5mb', parameterLimit: 100000 }));

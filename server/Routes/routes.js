@@ -28,5 +28,6 @@ router.delete('/quiz/:id', QuizController.delete)
 router.get('/quiz/:id', QuizController.getOne)
 router.post('/quiz/:id/questions/new', QuestionController.add)
 router.post('/quiz/:id/questions', QuestionController.getAll)
+router.get('/quiz/:id/:questionId', QuestionController.getOne)
 
 export default router
