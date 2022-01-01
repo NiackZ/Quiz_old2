@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Context } from '..';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import QuestionForm from '../components/QuestionForm';
 import Loading from './Loading';
 import ControlledTabs from '../components/Tabs';
@@ -70,7 +70,7 @@ const QuizItem = () => {
 										questionsArray.map(question => {
 											return (
 											<div key={question.id} className='question-div'>
-												<span>{question.title}</span>
+												<span><Link className="qustion-link text-decoration-none" to={question.id}>{question.title}</Link></span>
 												{question.answers.length > 0 
 													? <ul>{question.answers.map(answer=> <li>{answer.text}</li>)}</ul>
 													: <div>Нет ответов</div>

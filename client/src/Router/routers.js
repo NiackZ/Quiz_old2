@@ -4,17 +4,19 @@ import Search from "../pages/Search"
 import Profile from '../pages/Profile'
 import Quiz from '../pages/Quiz'
 import QuizItem from "../pages/QuizItem"
+import Question from "../pages/Questions"
 
 export const publicRoutes = [
-	{path:'/', component: Home, exact: true},
-	{path:'/search', component: Search, exact: true},
-	{path:'/login', component: Login, exact: true}
+	{ path: '/', element: <Home/> },
+	{ path: '/search', element: <Search/> },
+	{ path: '/login', element: Login }
 ]
 
 export const privateRoutes = [
-	{path:'/', component: Home, exact: true},
-	{path:'/search', component: Search, exact: true},
-	{path:'/user/profile', component: Profile, exact: true},
-	{path:'/user/quiz', component: Quiz, exact: true},
-	{path:'/user/quiz/:id', component: QuizItem, exact: true}
+	{ path: '*', element: <Home/> },
+	{ path: 'search', element: <Search/> },
+	{ path: 'user/profile', element: <Profile/> },
+	{ path: 'user/quiz', element: <Quiz/> },
+	{ path: 'user/quiz/:id', element: <QuizItem/> },
+	{ path: 'user/quiz/:id/:questionId', element: <Question/> }
 ]

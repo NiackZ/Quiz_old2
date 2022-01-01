@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { Context } from '..';
 import { publicRoutes, privateRoutes } from './routers';
 
@@ -8,32 +8,30 @@ const AppRouter = () => {
 
 	if (store.isAuth){
 		return (
-			<Switch>
-			{privateRoutes.map(route=>
-				<Route
-					component={route.component}
-					exact={route.exact}
-					path={route.path}
-					key={route.path}
-				/>
-			)}
-			<Redirect to="/" />
-		</Switch>
+			<Routes>
+				{privateRoutes.map(route=>
+					<Route
+						element={route.element}
+						path={route.path}
+						key={route.path}
+					/>
+				)}
+				<Route path="/"/>
+			</Routes>
 		)
 	}
 
 	return (
-		<Switch>
-		{publicRoutes.map(route=>
-			<Route
-				component={route.component}
-				exact={route.exact}
-				path={route.path}
-				key={route.path}
-			/>
-		)}
-		<Redirect to="/" />
-	</Switch>
+		<Routes>
+			{publicRoutes.map(route=>
+				<Route
+					element={route.element}
+					path={route.path}
+					key={route.path}
+				/>
+			)}
+			<Route path="/"  />
+		</Routes>
 	);
 };
 
