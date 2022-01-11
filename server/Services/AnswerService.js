@@ -7,7 +7,7 @@ class AnswerService {
 		for (let [index, val] of data.answers.entries()) {
 			const createdAnswer = await answerModel.create({
 				question: data.questionId,
-				text: val.value,
+				text: val.text,
 				index
 			})
 			answerIds.push(createdAnswer._id)

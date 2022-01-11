@@ -16,14 +16,12 @@ class QuestionService {
 		return result
 	}
 
-	/*
-	async getOne(id, userId) {
-		const oneQuiz = await quizModel.find({_id: id, user: userId})
-		return oneQuiz
+	async getOne(id) {
+		const question = await questionModel.findById(id)
+		return question
 	}
 
-	
-
+	/*
 	async delete(quiz_id) {
 		const deletedQuiz = await quizModel.deleteOne({ _id: quiz_id })
 		return deletedQuiz

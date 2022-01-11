@@ -4,27 +4,45 @@ import { Button, Col, Form, Row, Alert } from 'react-bootstrap'
 import { Context } from '..'
 import './Forms.css'
 
-const QuestionForm = ({quizId}) => {
+const QuestionForm = ({quizId, questionId}) => {
 	const { store } = useContext(Context)
-
 	const [question, setQuestion] = useState({
+		id: null,
+		quiz: null,
 		title: '',
-		parent: false
+		isParent: false,
+		answers: [
+			{ id: uuidv4(), text: "" },
+			{ id: uuidv4(), text: "" }
+		]
 	})
-
-	const [answers, setAnswers] = useState([
-		{ id: uuidv4(), value: "" },
-		{ id: uuidv4(), value: "" }
-	])
 
 	const [answerLoad, setAnswerLoad] = useState(true)
 
 	useEffect(() => {
-		if (answers.length < 2)
+		if (question.answers.length < 2)
 			setAnswerLoad(false)
 		else
 			setAnswerLoad(true)
-	}, [answers])
+	}, [question.answers])
+
+	useEffect(() => {
+		console.log('questionId: ',questionId)
+		if (questionId !== null) getQuestion()
+	}, [])
+
+	const getQuestion = async () => {
+		const response = await axios.get(
+			`/quiz/${quizId}/${questionId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			}
+		)
+		if (response.data.id)
+			setQuestion(response.data)
+	}
 
 	const changeHandler = event =>
 		setQuestion({ ...question, [event.target.name]: event.target.value })
@@ -33,18 +51,31 @@ const QuestionForm = ({quizId}) => {
 		setQuestion({ ...question, [event.target.name]: !question[event.target.name] })
 
 	const changeAnswer = (event, answerId) =>
-		setAnswers(answers.map(answer => answer.id === answerId ? { ...answer, value: event.target.value } : answer))
+		setQuestion({...question, answers: question.answers.map(answer => answer.id === answerId ? { ...answer, text: event.target.value } : answer)})
 
 	const deleteAnswer = (answerId) =>
-		setAnswers(answers.filter(answer => answer.id != answerId))
+		setQuestion({...question, answers: question.answers.filter(answer => answer.id != answerId)})
 
 	const addAnswer = () =>
-		setAnswers([...answers, { id: uuidv4(), value: "" }])
+		setQuestion({...question, answers: [...question.answers, { id: uuidv4(), text: "" }]})
 
 	const addQuestion = async () => {
 		try {
-			const response = await axios.post(`/quiz/${quizId}/questions/new`,{...question, answers: answers})
+			const response = await axios.post(`/quiz/${quizId}/questions/new`, question)
 			console.log(response?.data)
+			if (response.data.addQuestionId) {
+				console.log("Вопрос добавлен")
+				setQuestion({
+					id: null,
+					quiz: null,
+					title: '',
+					isParent: false,
+					answers: [
+						{ id: uuidv4(), text: "" },
+						{ id: uuidv4(), text: "" }
+					]
+				})
+			}
 		} catch (error) {
 			console.dir(error.response.data)
 		}
@@ -55,7 +86,7 @@ const QuestionForm = ({quizId}) => {
 			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
 		)
 	}
-
+	console.log(question)
 	return (
 		<Form>
 			<Row className="justify-content-md-center">
@@ -64,7 +95,7 @@ const QuestionForm = ({quizId}) => {
 					<Form.Control className="bg-transparent text-white" type="text" placeholder="Введите вопрос" name="title" value={question.title} onChange={changeHandler} />
 				</Col>
 				<Col lg={8} className="mb-3" >
-					<Form.Check className="bg-transparent text-white" label="Родитель" name="parent" onChange={checkboxHandler} />
+					<Form.Check className="bg-transparent text-white" checked={question.isParent} label="Родитель" name="isParent" onChange={checkboxHandler} />
 				</Col>
 				<Col lg={8} className="mb-3">
 					Ответы
@@ -78,9 +109,9 @@ const QuestionForm = ({quizId}) => {
 							</Alert>
 						</Col>
 				}
-				{answers.map((answer, index) =>
+				{question.answers.map((answer, index) =>
 					<Col lg={8} className="mb-3 d-flex gap-2" key={answer.id}>
-						<Form.Control className="bg-transparent text-white" type="text" placeholder="Введите ответ" name={"answer" + index} value={answer.value} onChange={(e) => changeAnswer(e, answer.id)} />
+						<Form.Control className="bg-transparent text-white" type="text" placeholder="Введите ответ" name={"answer" + index} value={answer.text} onChange={(e) => changeAnswer(e, answer.id)} />
 						<Button type="button" variant="custom" className="btn-red text-white" onClick={() => deleteAnswer(answer.id)}>
 							Удалить
 						</Button>

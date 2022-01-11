@@ -55,7 +55,7 @@ const QuizItem = () => {
 			eventKey: "newQuestion", title: "Новый вопрос", content:
 				<Container>
 					<h3 className="text-center">{quizName}</h3>
-					<QuestionForm quizId={itemId} />
+					<QuestionForm quizId={itemId} questionId={null} />
 				</Container>
 		},
 		{
@@ -72,7 +72,7 @@ const QuizItem = () => {
 											<div key={question.id} className='question-div'>
 												<span><Link className="qustion-link text-decoration-none" to={question.id}>{question.title}</Link></span>
 												{question.answers.length > 0 
-													? <ul>{question.answers.map(answer=> <li>{answer.text}</li>)}</ul>
+													? <ul>{question.answers.map(answer=> <li key={answer.id}>{answer.text}</li>)}</ul>
 													: <div>Нет ответов</div>
 												}
 											</div>)

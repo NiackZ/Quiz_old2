@@ -2,30 +2,16 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import QuestionForm from '../components/QuestionForm';
 
 const Question = () => {
 	const params = useParams();
-	console.log(params)
-	useEffect(() => {
-		getQuestion()
-	})
-
-	const getQuestion = async () => {
-		const response = await axios.get(
-			`/quiz/${params.id}/${params.questionId}`,
-			{
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('token')}`
-				}
-			}
-		)
-		console.log(response?.data)
-	}
 
 	return (
-		<Container className="margin-container text-center">
-			<h3 className="text-center">Question.js</h3>
-			{params.questionId}
+		<Container className="margin-container">
+			<h3 className="text-center">Questions.js</h3>
+			<div className="text-center">{params.questionId}</div>
+			<QuestionForm quizId={params.id} questionId={params.questionId} />
 		</Container>
 	);
 };

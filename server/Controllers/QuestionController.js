@@ -7,20 +7,20 @@ class QuestionController {
 
 	async add(req, res, next) {
 		try {
+			console.log(req.body)
 			const questionData = Object.assign({
 				title: req.body.title,
-				parent: req.body.parent,
+				parent: req.body.isParent,
 				quizId: req.params.id
 			})
 			const addQuestionId = await QuestionService.add(questionData)
-			let addAnswersResult = null
-			if (addQuestionId) {
-				const answerData = Object.assign({
-					answers: req.body.answers,
-					questionId: addQuestionId
-				})
-				addAnswersResult = await AnswerService.add(answerData)
-			}
+			console.log(addQuestionId)
+			if (!addQuestionId) return res.status(400)
+			const answerData = Object.assign({
+				answers: req.body.answers,
+				questionId: addQuestionId
+			})
+			const	addAnswersResult = await AnswerService.add(answerData)
 			return res.json({ addQuestionId, addAnswersResult })
 		} catch (error) {
 			console.log('error');
@@ -66,11 +66,29 @@ class QuestionController {
 			const token = req.headers.authorization.split(' ')[1]
 			const { id, questionId } = req.params
 			if (!token || !id || !questionId) res.status(400)
-			 const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
-			 console.log(userData)
-			// const getResult = await QuizService.getOne(id, userData.id)
-			// return res.json(getResult)
-			return res.json('hey')
+			const {userData} = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
+			console.log(userData)
+			if (!userData.id) return res.status(400)
+			const result = await QuestionService.getOne(questionId)
+			if (result === null) return res.status(400)
+			const answer = (await AnswerService.getAll(result.id)).map((answer) => {
+				return {
+					id: answer._id,
+					question: answer.question,
+					text: answer.text,
+					index: answer.index
+				}
+			}).sort((a, b) => (a.question).equals(b.question)
+					? a.index - b.index 
+					: a.question - b.question
+			)
+			return res.json({
+				id: result._id,
+				quiz: result.quiz,
+				title: result.title,
+				answers: answer,
+				isParent: result.isParent
+			})
 		} catch (error) {
 			console.log('error');
 			console.dir(error)
