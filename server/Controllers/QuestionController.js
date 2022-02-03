@@ -67,7 +67,6 @@ class QuestionController {
 			const { id, questionId } = req.params
 			if (!token || !id || !questionId) res.status(400)
 			const {userData} = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
-			console.log(userData)
 			if (!userData.id) return res.status(400)
 			const result = await QuestionService.getOne(questionId)
 			if (result === null) return res.status(400)
@@ -89,6 +88,57 @@ class QuestionController {
 				answers: answer,
 				isParent: result.isParent
 			})
+		} catch (error) {
+			console.log('error');
+			console.dir(error)
+			res.status(500).json(error)
+		}
+	}
+
+	async updateOne(req, res, next) {
+		try {
+			const token = req.headers.authorization.split(' ')[1]
+			const { id, questionId } = req.params
+			if (!token || !id || !questionId) res.status(400)
+			const {userData} = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
+			if (!userData.id) return res.status(400)
+			const questionData = req.body
+			console.log(questionData)
+			const updateResult = await QuestionService.update({
+				id: questionData.id,
+				title: questionData.title
+			})
+			console.log(updateResult)
+			/*
+			{
+				acknowledged: true,
+				modifiedCount: 1,
+				upsertedId: null,
+				upsertedCount: 0,
+			  matchedCount: 1
+		 	}
+			*/
+			// const result = await QuestionService.getOne(questionId)
+			// if (result === null) return res.status(400)
+			// const answer = (await AnswerService.getAll(result.id)).map((answer) => {
+			// 	return {
+			// 		id: answer._id,
+			// 		question: answer.question,
+			// 		text: answer.text,
+			// 		index: answer.index
+			// 	}
+			// }).sort((a, b) => (a.question).equals(b.question)
+			// 		? a.index - b.index 
+			// 		: a.question - b.question
+			// )
+			// return res.json({
+			// 	id: result._id,
+			// 	quiz: result.quiz,
+			// 	title: result.title,
+			// 	answers: answer,
+			// 	isParent: result.isParent
+			// })
+			return res.json('hey')
 		} catch (error) {
 			console.log('error');
 			console.dir(error)

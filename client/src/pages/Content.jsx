@@ -1,6 +1,5 @@
-import axios from 'axios';
 import React, { useState } from 'react';
-import { Col, Container, Form, Image, Button, Row } from 'react-bootstrap';
+import {Container} from 'react-bootstrap';
 import myimg from "../img/84355595_p0.jpg"
 import Input from '../components/Input/Input';
 // import ImgCrop from 'antd-img-crop';

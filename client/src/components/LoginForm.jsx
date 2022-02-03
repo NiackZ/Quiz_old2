@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap'
-import axios from 'axios'
+import $api from '../http/axios';
 import { Context } from '..'
 import './Forms.css'
 

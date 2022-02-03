@@ -1,10 +1,10 @@
-import axios from 'axios';
+import $api from '../http/axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Col, Form, Row, Alert } from 'react-bootstrap'
 import { Context } from '..'
 import './Forms.css'
 
-const QuestionForm = ({quizId, questionId}) => {
+const QuestionForm = ({quizId, questionId, btnName}) => {
 	const { store } = useContext(Context)
 	const [question, setQuestion] = useState({
 		id: null,
@@ -32,7 +32,7 @@ const QuestionForm = ({quizId, questionId}) => {
 	}, [])
 
 	const getQuestion = async () => {
-		const response = await axios.get(
+		const response = await $api.get(
 			`/quiz/${quizId}/${questionId}`,
 			{
 				headers: {
@@ -61,7 +61,7 @@ const QuestionForm = ({quizId, questionId}) => {
 
 	const addQuestion = async () => {
 		try {
-			const response = await axios.post(`/quiz/${quizId}/questions/new`, question)
+			const response = await $api.post(`/quiz/${quizId}/questions/new`, question)
 			console.log(response?.data)
 			if (response.data.addQuestionId) {
 				console.log("Вопрос добавлен")
@@ -76,6 +76,23 @@ const QuestionForm = ({quizId, questionId}) => {
 					]
 				})
 			}
+		} catch (error) {
+			console.dir(error.response.data)
+		}
+	}
+
+	const saveQuestion = async () =>{
+		try {
+			const response = await $api.put(
+				`/quiz/${quizId}/${questionId}`, question,
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('token')}`
+					}
+				}
+			)
+			console.log(response)
+
 		} catch (error) {
 			console.dir(error.response.data)
 		}
@@ -124,8 +141,13 @@ const QuestionForm = ({quizId, questionId}) => {
 						</Button>
 					</Col>
 					<Col xs={10} lg={4} className="mx-auto mx-lg-1">
-						<Button type="button" variant="custom" className="btn-fav text-white w-100" onClick={answerLoad ? addQuestion : null}>
-							Добавить вопрос
+						<Button type="button" variant="custom" className="btn-fav text-white w-100" onClick={
+							answerLoad 
+							? questionId !== null 
+								? saveQuestion 
+								: addQuestion 
+							: null}>
+							{ questionId !== null ? 'Сохранить вопрос': 'Добавить вопрос'}
 						</Button>
 					</Col>
 				</div>

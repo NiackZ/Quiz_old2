@@ -21,6 +21,14 @@ class QuestionService {
 		return question
 	}
 
+	async update(data) {
+		const result = await questionModel.updateOne({ 
+			_id: data.id, 
+			title: data.title 
+		})
+		return result
+	}
+
 	/*
 	async delete(quiz_id) {
 		const deletedQuiz = await quizModel.deleteOne({ _id: quiz_id })

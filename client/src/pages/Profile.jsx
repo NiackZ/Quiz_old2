@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { Col, Container, Form, Image, Button, Row } from 'react-bootstrap';
 import myimg from "../img/84355595_p0.jpg"

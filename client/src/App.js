@@ -4,15 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import axios from 'axios'
-
 import MyNavbar from './modules/MyNavbar'
 import AppRouter from './Router/AppRouter'
 import { Context } from '.'
 import Loading from './pages/Loading';
-
-axios.defaults.baseURL = 'http://localhost:5000/api';
-axios.defaults.withCredentials = 1
 
 function App() {
 

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import $api from '../http/axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Container, Form, Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -15,7 +15,7 @@ const Quiz = () => {
 	}, [])
 
 	const checkQuiz = async () =>{
-		const response = await axios.post('/quiz', { user_id: store.user.id })
+		const response = await $api.post('/quiz', { user_id: store.user.id })
 		if (response.data.length > 0 )
 			setQuizArray(response.data)
 			console.log(response.data)
@@ -28,7 +28,7 @@ const Quiz = () => {
 
 	const addNewQuiz = async () => {
 		try {
-			const response = await axios.post('/quiz/new', { quizName, user_id: store.user.id })
+			const response = await $api.post('/quiz/new', { quizName, user_id: store.user.id })
 			if (response.status==200){
 				const newQuizArray = [...quizArray, response.data]
 				setQuizArray(newQuizArray)
@@ -41,7 +41,7 @@ const Quiz = () => {
 
 	const delQuiz = async (id) => {
 		try {
-			const response = await axios.delete(`/quiz/${id}`)
+			const response = await $api.delete(`/quiz/${id}`)
 			if (response.status == 200 && response.statusText=="OK")
 				setQuizArray(quizArray.filter(item=>item._id != id))
 		} catch (error) {

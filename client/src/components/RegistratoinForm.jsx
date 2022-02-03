@@ -1,6 +1,7 @@
-import axios from 'axios';
+
 import React, { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap'
+import $api from '../http/axios';
 import './Forms.css'
 
 const RegistratoinForm = () => {
@@ -19,7 +20,7 @@ const RegistratoinForm = () => {
 
 	const reg = async () =>{
 		try {
-			const response = await axios.post('/api/registration', {...form})
+			const response = await $api.post('/api/registration', {...form})
 		} catch (error) {
 			console.dir(error.response.data)
 		}

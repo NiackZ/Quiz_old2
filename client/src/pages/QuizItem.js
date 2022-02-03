@@ -1,4 +1,4 @@
-import axios from 'axios';
+import $api from '../http/axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Context } from '..';
@@ -33,7 +33,7 @@ const QuizItem = () => {
 	}
 
 	const checkQuiz = async () => {
-		const response = await axios.get(
+		const response = await $api.get(
 			`/quiz/${itemId}`,
 			{
 				headers: {
@@ -45,7 +45,7 @@ const QuizItem = () => {
 	}
 
 	const getAllQuestions = async () => {
-		const response = await axios.post(`/quiz/${itemId}/questions`)
+		const response = await $api.post(`/quiz/${itemId}/questions`)
 		if (response.data.questions.length > 0) setQuestionsArray(response.data.questions)
 	}
 	console.log(questionsArray)

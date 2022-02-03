@@ -1,5 +1,4 @@
 import express from 'express'
-import Fastify from 'fastify'
 import helmet from 'helmet'
 import cors from 'cors'
 import mongoose from 'mongoose'
@@ -31,8 +30,6 @@ const maxUploadSize = 5 * 1024 * 1024
 const upload = multerUpload({storage:fileStorageEngine, limits: maxUploadSize})
 
 const PORT = process.env.PORT || 5000
-
-const expressServer = 1
 
 const startExpressServer = async () =>{
 	try {
@@ -67,4 +64,4 @@ const startExpressServer = async () =>{
 		console.log(error);
 	}
 }
-expressServer ? startExpressServer() : startFasitfyServer()
+startExpressServer()
