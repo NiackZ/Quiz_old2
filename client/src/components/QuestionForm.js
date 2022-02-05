@@ -20,7 +20,7 @@ const QuestionForm = ({quizId, questionId, btnName}) => {
 	const [answerLoad, setAnswerLoad] = useState(true)
 
 	useEffect(() => {
-		if (question.answers.length < 2)
+		if (question.answers.length < 2 || question.answers.length > 4)
 			setAnswerLoad(false)
 		else
 			setAnswerLoad(true)
@@ -91,8 +91,8 @@ const QuestionForm = ({quizId, questionId, btnName}) => {
 					}
 				}
 			)
-			console.log(response)
-
+			console.log(response.data.questionUpdate == 0 ? 'Текст вопроса остался прежним.' : 'Текст вопроса обновлен.')
+			console.log('Обновлено ответов: '+response.data?.addAnswersCount)
 		} catch (error) {
 			console.dir(error.response.data)
 		}
@@ -122,21 +122,21 @@ const QuestionForm = ({quizId, questionId, btnName}) => {
 						? ""
 						: <Col lg={8} className="mb-3">
 							<Alert variant="danger" >
-								Необходимо как минимум 2 ответа
+								Необходимо как минимум 2 ответа, а как максимум 4
 							</Alert>
 						</Col>
 				}
 				{question.answers.map((answer, index) =>
 					<Col lg={8} className="mb-3 d-flex gap-2" key={answer.id}>
 						<Form.Control className="bg-transparent text-white" type="text" placeholder="Введите ответ" name={"answer" + index} value={answer.text} onChange={(e) => changeAnswer(e, answer.id)} />
-						<Button type="button" variant="custom" className="btn-red text-white" onClick={() => deleteAnswer(answer.id)}>
+						<Button type="button" variant="custom" className={'btn-red text-white'+(question.answers.length<=2 ? " disabled": "")} onClick={question.answers.length<=2 ? null : () => deleteAnswer(answer.id)}>
 							Удалить
 						</Button>
 					</Col>
 				)}
 				<div align="center" className="my-2">
 					<Col xs={10} lg={4} className="mx-auto mx-lg-1 mb-3">
-						<Button type="button" variant="custom" className="btn-fav text-white w-100" onClick={addAnswer}>
+						<Button type="button" variant="custom" className={"btn-fav text-white w-100"+(question.answers.length<=3 ? "": " disabled")} onClick={question.answers.length<=3 ? addAnswer : null}>
 							Добавить ответ
 						</Button>
 					</Col>

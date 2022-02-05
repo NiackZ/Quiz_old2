@@ -18,7 +18,7 @@ class QuizController {
 	async getOne(req, res, next) {
 		try {
 			const { id } = req.params
-			const token = req.headers.authorization
+			const token = req.headers.authorization.split(' ')[1]
 			const {userData} = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
 			const getResult = await QuizService.getOne(id, userData.id)
 			return res.json(getResult)

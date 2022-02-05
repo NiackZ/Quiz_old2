@@ -19,17 +19,21 @@ class AnswerService {
 		const allQuizzes = await answerModel.find( { question : { $in : questionsIds } } );
 		return allQuizzes
 	}
-/*
+
+	async deleteAllByQuestionId(_id) {
+		const deletedItem = await answerModel.deleteMany({question: _id})
+		return deletedItem
+	}
+
+	async update(data) {
+		await this.deleteAllByQuestionId(data.questionId)
+		return await this.add(data)
+	}
+
+	/*
 	async getOne(id, userId) {
 		const oneQuiz = await quizModel.find({_id: id, user: userId})
 		return oneQuiz
-	}
-
-	
-
-	async delete(quiz_id) {
-		const deletedQuiz = await quizModel.deleteOne({ _id: quiz_id })
-		return deletedQuiz
 	}
 	*/
 }

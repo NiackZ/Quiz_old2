@@ -20,7 +20,7 @@ class QuestionController {
 				answers: req.body.answers,
 				questionId: addQuestionId
 			})
-			const	addAnswersResult = await AnswerService.add(answerData)
+			const addAnswersResult = await AnswerService.add(answerData)
 			return res.json({ addQuestionId, addAnswersResult })
 		} catch (error) {
 			console.log('error');
@@ -41,15 +41,15 @@ class QuestionController {
 					index: answer.index
 				}
 			}).sort((a, b) => (a.question).equals(b.question)
-					? a.index - b.index 
-					: a.question - b.question
+				? a.index - b.index
+				: a.question - b.question
 			)
 			const questions = result.map((question) => {
 				return {
 					id: question._id,
 					quiz: question.quiz,
 					title: question.title,
-					answers: answers.filter(answer=>answer.question == question.id),
+					answers: answers.filter(answer => answer.question == question.id),
 					isParent: question.isParent
 				}
 			})
@@ -66,7 +66,7 @@ class QuestionController {
 			const token = req.headers.authorization.split(' ')[1]
 			const { id, questionId } = req.params
 			if (!token || !id || !questionId) res.status(400)
-			const {userData} = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
+			const { userData } = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
 			if (!userData.id) return res.status(400)
 			const result = await QuestionService.getOne(questionId)
 			if (result === null) return res.status(400)
@@ -78,8 +78,8 @@ class QuestionController {
 					index: answer.index
 				}
 			}).sort((a, b) => (a.question).equals(b.question)
-					? a.index - b.index 
-					: a.question - b.question
+				? a.index - b.index
+				: a.question - b.question
 			)
 			return res.json({
 				id: result._id,
@@ -100,24 +100,25 @@ class QuestionController {
 			const token = req.headers.authorization.split(' ')[1]
 			const { id, questionId } = req.params
 			if (!token || !id || !questionId) res.status(400)
-			const {userData} = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
+			const { userData } = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
 			if (!userData.id) return res.status(400)
-			const questionData = req.body
-			console.log(questionData)
-			const updateResult = await QuestionService.update({
-				id: questionData.id,
-				title: questionData.title
-			})
-			console.log(updateResult)
+			const { title, isParent } = req.body
+			const _id = req.body.id
+			const updateQuestionResult = await QuestionService.update({ _id, title, isParent })
 			/*
 			{
 				acknowledged: true,
 				modifiedCount: 1,
 				upsertedId: null,
 				upsertedCount: 0,
-			  matchedCount: 1
-		 	}
+				matchedCount: 1
+				}
 			*/
+			const answerData = Object.assign({
+				answers: req.body.answers,
+				questionId: _id
+			})
+			const addAnswersResult = await AnswerService.update(answerData)
 			// const result = await QuestionService.getOne(questionId)
 			// if (result === null) return res.status(400)
 			// const answer = (await AnswerService.getAll(result.id)).map((answer) => {
@@ -138,7 +139,10 @@ class QuestionController {
 			// 	answers: answer,
 			// 	isParent: result.isParent
 			// })
-			return res.json('hey')
+			return res.json({
+				questionUpdate: updateQuestionResult.modifiedCount,
+				addAnswersCount: addAnswersResult.length
+			})
 		} catch (error) {
 			console.log('error');
 			console.dir(error)

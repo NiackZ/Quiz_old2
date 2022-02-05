@@ -2,16 +2,16 @@ import questionModel from "../models/question-model.js"
 
 class QuestionService {
 
-	async add( data ) {
-		const result = await questionModel.create({ 
-			quiz: data.quizId, 
-			title: data.title, 
-			isParent: data.parent 
+	async add(data) {
+		const result = await questionModel.create({
+			quiz: data.quizId,
+			title: data.title,
+			isParent: data.parent
 		})
 		return result._id
 	}
 
-	async getAll( quiz ) {
+	async getAll(quiz) {
 		const result = await questionModel.find(quiz)
 		return result
 	}
@@ -21,11 +21,8 @@ class QuestionService {
 		return question
 	}
 
-	async update(data) {
-		const result = await questionModel.updateOne({ 
-			_id: data.id, 
-			title: data.title 
-		})
+	async update({ _id, title, isParent }) {
+		const result = await questionModel.updateOne({ _id, title,	isParent})
 		return result
 	}
 
