@@ -45,7 +45,7 @@ const QuizItem = () => {
 	}
 
 	const getAllQuestions = async () => {
-		const response = await $api.post(`/quiz/${itemId}/questions`)
+		const response = await $api.post(`/quiz/${itemId}/questions`, { answers: true })
 		if (response.data.questions.length > 0) setQuestionsArray(response.data.questions)
 	}
 	console.log(questionsArray)

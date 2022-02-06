@@ -4,7 +4,7 @@ import { Button, Col, Form, Row, Alert } from 'react-bootstrap'
 import { Context } from '..'
 import './Forms.css'
 
-const QuestionForm = ({quizId, questionId, btnName}) => {
+const QuestionForm = ({quizId, questionId}) => {
 	const { store } = useContext(Context)
 	const [question, setQuestion] = useState({
 		id: null,

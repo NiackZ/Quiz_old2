@@ -15,7 +15,11 @@ const Quiz = () => {
 	}, [])
 
 	const checkQuiz = async () =>{
-		const response = await $api.post('/quiz', { user_id: store.user.id })
+		const response = await $api.post('/quiz',{
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		})
 		if (response.data.length > 0 )
 			setQuizArray(response.data)
 			console.log(response.data)

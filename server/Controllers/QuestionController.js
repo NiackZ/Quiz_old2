@@ -7,14 +7,12 @@ class QuestionController {
 
 	async add(req, res, next) {
 		try {
-			console.log(req.body)
 			const questionData = Object.assign({
 				title: req.body.title,
 				parent: req.body.isParent,
 				quizId: req.params.id
 			})
 			const addQuestionId = await QuestionService.add(questionData)
-			console.log(addQuestionId)
 			if (!addQuestionId) return res.status(400)
 			const answerData = Object.assign({
 				answers: req.body.answers,
@@ -31,7 +29,20 @@ class QuestionController {
 
 	async getAll(req, res, next) {
 		try {
+			const withAnswers = (req.body.answers == undefined ? false : req.body.answers)
 			const result = await QuestionService.getAll({ quiz: req.params.id })
+
+			if (!withAnswers)
+				return res.json({
+					questions: result.map((question) => {
+						return {
+							id: question._id,
+							title: question.title,
+							isParent: question.isParent
+						}
+					})
+				})
+
 			const ids = result.map(q => q._id)
 			const answers = (await AnswerService.getAll(ids)).map((answer) => {
 				return {
