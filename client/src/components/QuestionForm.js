@@ -27,7 +27,6 @@ const QuestionForm = ({quizId, questionId}) => {
 	}, [question.answers])
 
 	useEffect(() => {
-		console.log('questionId: ',questionId)
 		if (questionId !== null) getQuestion()
 	}, [])
 
@@ -103,7 +102,6 @@ const QuestionForm = ({quizId, questionId}) => {
 			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
 		)
 	}
-	console.log(question)
 	return (
 		<Form>
 			<Row className="justify-content-md-center">

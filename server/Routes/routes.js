@@ -5,6 +5,7 @@ import AuthController from "../Controllers/AuthController.js";
 import QuizController from "../Controllers/QuizController.js";
 import QuestionController from "../Controllers/QuestionController.js";
 import AnswerController from "../Controllers/AnswerController.js";
+import QuestionLink from "../Controllers/QuestionLink.js";
 
 
 const router = new Router()
@@ -30,6 +31,7 @@ router.post('/quiz/:id/questions', QuestionController.getAll)
 router.get('/quiz/:id/:questionId', QuestionController.getOne)
 router.put('/quiz/:id/:questionId', QuestionController.updateOne)
 router.post('/quiz/:id/:questionId/answers', AnswerController.getOne)
-
+router.post('/quiz/:id/:questionId/link', QuestionLink.add)
+router.get('/quiz/:id/:questionId/link', QuestionLink.getOne)
 
 export default router

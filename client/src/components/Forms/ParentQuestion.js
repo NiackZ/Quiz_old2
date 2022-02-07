@@ -4,8 +4,7 @@
 // import './Forms.css'
 
 import { useEffect, useState } from "react"
-import { Col, Form, Row } from "react-bootstrap"
-import { useLocation } from "react-router-dom"
+import { Button, Col, Form, Row } from "react-bootstrap"
 import $api from "../../http/axios"
 import Select from 'react-select'
 import '../../css/react-select.css'
@@ -15,27 +14,7 @@ const customStyles = {
 		...provided,
 		text: 'yellow',
 		color: 'aqua',
-		background: '#2f3439',
-		':hover': {
-			color: 'yellow',
-			background: 'green',
-		},
-		':focus': {
-			color: 'yellow',
-			background: 'green',
-		},
-		':active': {
-			color: 'yellow',
-			background: 'green',
-		},
-		':target': {
-			color: 'yellow',
-			background: 'green',
-		},
-		':visited': {
-			color: 'yellow',
-			background: 'green',
-		}
+		background: '#2f3439'
 	}),
 	valueContainer: (provided) => ({
 		...provided,
@@ -78,7 +57,8 @@ const customStyles = {
 		':hover': {
 			color: state.isSelected ? 'aqua' : 'yellow',
 			cursor: 'pointer'
-		}
+		},
+		':active': {}
 	}),
 	singleValue: (provided, state) => ({
 		...provided,
@@ -88,24 +68,23 @@ const customStyles = {
 	})
 }
 
-const ParentQuestion = () => {
-	const location = useLocation()
-	const quizId = location.pathname.split('/')[location.pathname.split('/').length - 2]
-	const questonId = location.pathname.split('/')[location.pathname.split('/').length - 1]
+const ParentQuestion = ({ quizId, questionId }) => {
 
 	const [selectedOption, setSelectedOption] = useState([]);
 	const [selectedParentQuestion, setSelectedParentQuestion] = useState(null);
 	const [answerOption, setAnswerOption] = useState([]);
 	const [selectedAnswer, setSelectedAnswer] = useState(null);
+	const [link, setLink] = useState(null);
+	const [loadedLink, setLoadedLink] = useState(false);
 
 	useEffect(() => {
 		getAllQuestions()
+		checkQuestionLink()
 	}, [])
 
 	useEffect(async () => {
 		setSelectedAnswer(null)
-		console.log('selectedParentQuestion = ', selectedParentQuestion);
-		if (selectedParentQuestion !== null) {
+		if (selectedParentQuestion) {
 			const response = await $api.post(`/quiz/${quizId}/${selectedParentQuestion.value}/answers`,
 				{
 					headers: {
@@ -113,7 +92,6 @@ const ParentQuestion = () => {
 					}
 				})
 			if (response.data?.answers.length > 0) {
-				console.log(response.data.answers);
 				const data = response.data.answers.map((a) => {
 					return {
 						value: a.id,
@@ -127,9 +105,19 @@ const ParentQuestion = () => {
 		}
 	}, [selectedParentQuestion])
 
+	const checkQuestionLink = async () => {
+		const response = await $api.get(`/quiz/${quizId}/${questionId}/link`,
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			})
+		setLink(response.data)
+	}
+
 	const getAllQuestions = async () => {
 		const response = await $api.post(`/quiz/${quizId}/questions`, { answers: false })
-		const data = response.data.questions.filter(q => q.id !== questonId).map((q) => {
+		const data = response.data.questions.filter(q => q.id !== questionId).map((q) => {
 			return {
 				isParent: q.isParent,
 				value: q.id,
@@ -139,6 +127,42 @@ const ParentQuestion = () => {
 		setSelectedOption(data)
 	}
 
+	const linkQuestions = async () => {
+		const data = {
+			questionId,
+			questionParentId: selectedParentQuestion.value,
+			questionParentAnswerIndex: selectedAnswer.index
+		}
+		const response = await $api.post(`/quiz/${quizId}/${questionId}/link`, data,
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			})
+		console.log(response)
+		if (response.data == "Успех") {
+			const dd = {
+				questionParentId: selectedParentQuestion.value,
+				questionParentAnswerIndex: selectedAnswer.index
+			}
+			console.log(dd);
+			setLink(dd)
+		}
+	}
+
+	useEffect(() => {
+		if (!loadedLink)
+			if (link) {
+				setSelectedParentQuestion(selectedOption.filter(o => o.value == link.questionParentId)[0])
+				if (answerOption.length != 0) {
+					setSelectedAnswer(answerOption.filter(o => o.index == link.questionParentAnswerIndex)[0])
+					setLoadedLink(true)
+				}
+			}
+		},
+		[link, selectedOption, answerOption]
+	)
+	
 	return (
 		<Form>
 			<h3 className="text-center">ParentQuestion.js</h3>
@@ -166,6 +190,15 @@ const ParentQuestion = () => {
 						: ""
 					}
 				</Col>
+				{selectedAnswer !== null
+					? <div align="center" className="my-2">
+						<Col xs={10} lg={4} className="mx-auto mx-lg-1 mb-3">
+							<Button type="button" variant="custom" className="btn-fav text-white w-100" onClick={linkQuestions}>
+								Связать вопросы
+							</Button>
+						</Col>
+					</div>
+					: null}
 			</Row>
 		</Form>
 	);

@@ -12,7 +12,7 @@ const Question = () => {
 			<h3 className="text-center">Questions.js</h3>
 			<div className="text-center">{params.questionId}</div>
 			{/* <QuestionForm quizId={params.id} questionId={params.questionId} /> */}
-			<ParentQuestion/>
+			<ParentQuestion quizId={params.id} questionId={params.questionId}/>
 		</Container>
 	);
 };
