@@ -33,5 +33,5 @@ router.put('/quiz/:id/:questionId', QuestionController.updateOne)
 router.post('/quiz/:id/:questionId/answers', AnswerController.getOne)
 router.post('/quiz/:id/:questionId/link', QuestionLink.add)
 router.get('/quiz/:id/:questionId/link', QuestionLink.getOne)
-
+router.delete('/quiz/:id/:questionId/link', QuestionLink.delete)
 export default router

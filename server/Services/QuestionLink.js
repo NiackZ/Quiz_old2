@@ -11,10 +11,12 @@ class QuestionLinkService {
 
 	async getOne({ questionId }) {
 		const result = await questionLink.findOne({ questionId })
-		return {
-			questionParentId: result.questionParentId,
-			questionParentAnswerIndex: result.questionParentAnswerIndex
-		}
+		if (result)
+			return {
+				questionParentId: result.questionParentId,
+				questionParentAnswerIndex: result.questionParentAnswerIndex
+			}
+		return null
 	}
 	async deleteOne(questionId){
 		const deletedItem = await questionLink.deleteMany({questionId})

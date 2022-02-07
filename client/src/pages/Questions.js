@@ -11,7 +11,7 @@ const Question = () => {
 		<Container className="margin-container">
 			<h3 className="text-center">Questions.js</h3>
 			<div className="text-center">{params.questionId}</div>
-			{/* <QuestionForm quizId={params.id} questionId={params.questionId} /> */}
+			<QuestionForm quizId={params.id} questionId={params.questionId} /> 
 			<ParentQuestion quizId={params.id} questionId={params.questionId}/>
 		</Container>
 	);

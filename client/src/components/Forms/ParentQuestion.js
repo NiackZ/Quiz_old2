@@ -8,6 +8,7 @@ import { Button, Col, Form, Row } from "react-bootstrap"
 import $api from "../../http/axios"
 import Select from 'react-select'
 import '../../css/react-select.css'
+import AnswerResult from "./AnswerResult"
 
 const customStyles = {
 	menulist: (provided) => ({
@@ -150,6 +151,16 @@ const ParentQuestion = ({ quizId, questionId }) => {
 		}
 	}
 
+	const unlinkQuestions = async () => {
+		const response = await $api.delete(`/quiz/${quizId}/${questionId}/link`,
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			})
+		if (response.data.deletedCount != 0) setLink(null)
+	}
+
 	useEffect(() => {
 		if (!loadedLink)
 			if (link) {
@@ -159,48 +170,62 @@ const ParentQuestion = ({ quizId, questionId }) => {
 					setLoadedLink(true)
 				}
 			}
-		},
+	},
 		[link, selectedOption, answerOption]
 	)
-	
+
 	return (
-		<Form>
-			<h3 className="text-center">ParentQuestion.js</h3>
-			<Row className="justify-content-md-center">
-				<Col lg={8} className="mb-3">
-					{selectedParentQuestion == null ? "Пусто" : selectedParentQuestion.label}
-					<Select
-						className="custom-react-select-parent"
-						styles={customStyles}
-						isClearable={true}
-						value={selectedParentQuestion}
-						onChange={(e) => setSelectedParentQuestion(e)}
-						options={selectedOption}
-						placeholder={'Выберите родительский вопрос...'}
-					/>
-					{selectedParentQuestion !== null
-						? <Select
+		<>
+			<Form>
+				<h3 className="text-center">ParentQuestion.js</h3>
+				<Row className="justify-content-md-center">
+					<Col lg={8} className="mb-3">
+						{selectedParentQuestion == null ? "Пусто" : selectedParentQuestion.label}
+						<Select
+							className="custom-react-select-parent"
 							styles={customStyles}
 							isClearable={true}
-							value={selectedAnswer}
-							onChange={(e) => setSelectedAnswer(e)}
-							options={answerOption}
-							placeholder={'Выберите ответ...'}
+							value={selectedParentQuestion}
+							onChange={(e) => setSelectedParentQuestion(e)}
+							options={selectedOption}
+							placeholder={'Выберите родительский вопрос...'}
 						/>
-						: ""
-					}
-				</Col>
-				{selectedAnswer !== null
-					? <div align="center" className="my-2">
-						<Col xs={10} lg={4} className="mx-auto mx-lg-1 mb-3">
-							<Button type="button" variant="custom" className="btn-fav text-white w-100" onClick={linkQuestions}>
-								Связать вопросы
-							</Button>
-						</Col>
+						{selectedParentQuestion !== null
+							? <Select
+								styles={customStyles}
+								isClearable={true}
+								value={selectedAnswer}
+								onChange={(e) => setSelectedAnswer(e)}
+								options={answerOption}
+								placeholder={'Выберите ответ...'}
+							/>
+							: ""
+						}
+					</Col>
+					<div align="center" className="my-2">
+						{selectedAnswer !== null
+							?
+							<Col xs={10} lg={4} className="mx-auto mx-lg-1 mb-3">
+								<Button type="button" variant="custom" className="btn-fav text-white w-100" onClick={linkQuestions}>
+									Связать вопросы
+								</Button>
+							</Col>
+							: null}
+						{link !== null
+							? <Col xs={10} lg={4} className="mx-auto mx-lg-1 mb-3">
+								<Button type="button" variant="custom" className="btn-fav text-white w-100" onClick={unlinkQuestions}>
+									Удалить связь
+								</Button>
+							</Col>
+							: null}
 					</div>
-					: null}
-			</Row>
-		</Form>
+				</Row>
+			</Form >
+			{link !== null
+			? <AnswerResult/>
+			: null
+}
+		</>
 	);
 };
 
