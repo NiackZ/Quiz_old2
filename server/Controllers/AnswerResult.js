@@ -1,14 +1,19 @@
-
+import AnswerResultModel from '../Services/AnswerResult.js'
 import jwt from 'jsonwebtoken'
 
-class AnswerResult {
+class AnswerResultController {
 
 	async update(req, res, next) {
 		try {
 			const token = req.headers.authorization.split(' ')[1]
 			const { userData } = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
-			
-			return res.json('ok')
+			const { questionId } = req.params
+			const answersResults = Object.assign(
+				{answers: req.body.filter(ar=>(ar.result !== undefined && ar.result !== ""))}, 
+				{questionId}
+			)
+			const ARResponse = await AnswerResultModel.add(answersResults)
+			return res.json(ARResponse)
 		} catch (error) {
 			console.log('error');
 			console.dir(error)
@@ -18,4 +23,4 @@ class AnswerResult {
 
 }
 
-export default new AnswerResult()
+export default new AnswerResultController()

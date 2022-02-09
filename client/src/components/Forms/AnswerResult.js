@@ -13,8 +13,7 @@ const AnswerResult = () => {
 	const params = useParams(),
 		quizId = params.id,
 		questionId = params.questionId,
-		[answerArray, setAnswerArray] = useState([]),
-		[answersResults, setAnswersResults] = useState([]);
+		[answerArray, setAnswerArray] = useState([])
 
 	const getQuestionAnswers = async () => {
 		const response = await $api.post(`/quiz/${quizId}/${questionId}/answers`,
@@ -40,7 +39,7 @@ const AnswerResult = () => {
 	}
 
 	const updateResults = async()=>{
-		const response = await $api.post(`/quiz/${quizId}/${questionId}/results`,
+		const response = await $api.post(`/quiz/${quizId}/${questionId}/results`, answerArray,
 			{
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem('token')}`
