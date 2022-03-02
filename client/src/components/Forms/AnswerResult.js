@@ -13,10 +13,11 @@ const AnswerResult = () => {
 	const params = useParams(),
 		quizId = params.id,
 		questionId = params.questionId,
-		[answerArray, setAnswerArray] = useState([])
+		[answerArray, setAnswerArray] = useState([]),
+		[startCheckResult, setStartCheckResult] = useState(false)
 
 	const getQuestionAnswers = async () => {
-		const response = await $api.post(`/quiz/${quizId}/${questionId}/answers`,
+		const response = await $api.post(`/quiz/${quizId}/${questionId}/answers2`,
 			{
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -24,6 +25,29 @@ const AnswerResult = () => {
 			})
 		if (response.data?.answers.length > 0) {
 			setAnswerArray(response.data.answers)
+			setStartCheckResult(true)
+		}
+	}
+
+	const getQuestionAnswersResults = async () => {
+		const response = await $api.get(`/quiz/${quizId}/${questionId}/results`,
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			})
+		if (response.data instanceof Array) {
+			if (response.data.length > 0) {
+				let newArr = [...answerArray]
+				response.data.forEach((entry)=>{
+					newArr.map(aa=>{
+						if (aa.index === entry.index ) 
+							aa.result = entry.value
+					})
+				})
+				setAnswerArray(newArr)
+				setStartCheckResult(false)	
+			}
 		}
 	}
 
@@ -38,7 +62,7 @@ const AnswerResult = () => {
 		setAnswerArray(newAnswerArray)
 	}
 
-	const updateResults = async()=>{
+	const updateResults = async () => {
 		const response = await $api.post(`/quiz/${quizId}/${questionId}/results`, answerArray,
 			{
 				headers: {
@@ -49,8 +73,14 @@ const AnswerResult = () => {
 	}
 
 	useEffect(() => getQuestionAnswers(), [])
+	useEffect(() => {
+		if (startCheckResult)
+			if (answerArray.length > 0)
+				getQuestionAnswersResults()
+	}, [startCheckResult])
 
-	console.log(answerArray);
+	console.log(answerArray)
+
 	return (
 		<Form>
 			<Row className="justify-content-md-center">
@@ -60,7 +90,7 @@ const AnswerResult = () => {
 				{answerArray.map((answer) =>
 					<Col lg={8} className="mb-3 d-block gap-2" key={answer.id}>
 						<Form.Label>{answer.text}</Form.Label>
-						<Form.Control className="bg-transparent text-white" type="text" placeholder="Введите результат" name={"answer_" + answer.index} onChange={e => answerChange(e)} />
+						<Form.Control className="bg-transparent text-white" type="text" value={answer.result} placeholder="Введите результат" name={"answer_" + answer.index} onChange={e => answerChange(e)} />
 					</Col>
 				)}
 				<div align="center" className="my-2">

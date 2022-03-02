@@ -15,8 +15,19 @@ class AnswerResultService {
 	}
 	
 	async deleteByQuestionId(questionId) {
-		const deletedQuiz = await answerResult.deleteMany({ questionId })
-		return deletedQuiz
+		const response = await answerResult.deleteMany({ questionId })
+		return response
+	}
+
+	async getAll(questionId) {
+		const response = (await answerResult.find({ questionId })).map((result) => {
+			return {
+				id: result._id,
+				value: result.value,
+				index: result.questionAnswerIndex
+			}
+		})
+		return response
 	}
 }
 
